@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useRef } from 'react';
 
 import { useStateSubscription } from './state-subscription.js';
 
@@ -8,10 +8,9 @@ export function useStateFactory<V, A, P extends unknown[]>(
   stateFactoryFunction: (...args: P) => StateSubscriptionHandler<V, A>,
   params: P = [] as unknown as P
 ) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const stateHandler = useMemo(() => stateFactoryFunction(...params), params);
-  const actions = useMemo(() => stateHandler.getActions(), [stateHandler]);
-  const state = useStateSubscription(stateHandler);
+  const stateHandler = useRef(stateFactoryFunction(...params));
+  const actions = useRef(stateHandler.current.getActions());
+  const state = useStateSubscription(stateHandler.current);
 
   return [state, actions] as [V, A];
 }
