@@ -26,7 +26,7 @@ _Please keep in mind that dependencies for the hook needs to be flattened and ca
 ## Example
 
 Let's start with a simple state example. 
-You should start with the abstract class `BaseState`:
+You should start with the abstract class `StateHandler`:
 
 ```ts
 import { useStateFactory, StateHandler } from '@veams/status-quo';
@@ -126,5 +126,51 @@ const GlobalCounterDisplay = () => {
 }
 ```
 
+### What about debugging? 
 
+You know redux-devtools? You like it? We covered you (at least a bit)!
+You can enable the devtools in an easy way: 
 
+```ts
+
+class CounterStateHandler extends StateHandler<CounterState, CounterActions> {
+  constructor([startCount = 0]) {
+    super({
+      initialState: { count: startCount },
+      devTools: { enabled: true, namespace: 'Counter' },
+    });
+  }
+
+  getActions() {
+    return {
+      increase() {
+        this.setState(
+          {
+            count: this.getState() + 1,
+          },
+          'increase'
+        );
+      },
+      decrease() {
+        const currentState = this.getState();
+
+        if (currentState.count > 0) {
+          this.setState(
+            {
+              count: currentState - 1,
+            },
+            'decrease'
+          );
+        }
+      },
+    };
+  }
+}
+
+export function CounterStateFactory(...args) {
+  return new CounterStateHandler(...args);
+}
+```
+
+We just added the `devTools` option and also updated the `setState()` function by passing a second argument into it which is the actions name.
+Now you can open up the the browser extension and you are able to take a look at your actions and state(s).
