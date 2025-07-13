@@ -83,7 +83,7 @@ describe('State Handler', () => {
     customSubject.next(2);
     customSubject.next(3);
 
-    expect(spy).toBeCalledTimes(1);
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('should only call subscriber when object state has changed', async () => {
@@ -103,6 +103,6 @@ describe('State Handler', () => {
       test: 'test2',
     });
 
-    expect(spy).toBeCalledTimes(3); // 1. testValue (Initial value), 2. test (first setter), 3. test2 (second setter)
+    expect(spy).toHaveBeenCalledTimes(3); // 1. testValue (Initial value), 2. test (first setter), 3. test2 (second setter)
   });
 });
