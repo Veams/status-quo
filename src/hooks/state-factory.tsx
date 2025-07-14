@@ -12,5 +12,5 @@ export function useStateFactory<V, A, P extends unknown[]>(
   const actions = useRef(stateHandler.current.getActions());
   const state = useStateSubscription(stateHandler.current);
 
-  return [state, actions] as [V, A];
+  return [state, actions.current] as [V, A];
 }
